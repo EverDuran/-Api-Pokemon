@@ -3,9 +3,10 @@ import { PokemonService } from '../../servicios/pokemon.service';
 import { IPokemons } from '../../interfaces/lista-pokemon.interface';
 import { forkJoin } from 'rxjs/observable/forkJoin';
 import { IPokemon } from '../../interfaces/detalle-pokemon.interface';
-import { MatDialog, MatPaginator, MatSort, MatTableDataSource, PageEvent } from '@angular/material';
+import { MatDialog, MatPaginator, MatSort, MatTableDataSource, PageEvent, Sort } from '@angular/material';
 import { DialogoConfirmacionComponent } from '../dialogo-confirmacion/dialogo-confirmacion.component';
 import { ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-lista-pokemon',
@@ -14,14 +15,14 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ListaPokemonComponent implements OnInit {
 
+  value: string = "";
+
   displayedColumns = ['order', 'image', 'name', 'weight', 'height', 'delete'];
   dataSource = new MatTableDataSource([]);
   dataSourceCopy = new MatTableDataSource([]);
 
   pokemons: IPokemons = {
     count: 0,
-    next: null,
-    previous: null,
     results: []
   };
 
@@ -48,11 +49,16 @@ export class ListaPokemonComponent implements OnInit {
   constructor(
     private pokemonService: PokemonService,
     private dialog: MatDialog,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) { }
 
   ngOnInit() {
     this.listenAddParam();
+  }
+
+  searchPokemones() {
+    this.router.navigate(['/pokemons'], { queryParams: { text: this.value } });
   }
 
   listenAddParam() {
@@ -67,8 +73,11 @@ export class ListaPokemonComponent implements OnInit {
   }
 
   getPokemons(url: string = "") {
-    this.pokemonService.getPokemons(url, this.pageSize).subscribe(response => {
-      this.pokemons = response;
+    this.pokemonService.getPokemons(url).subscribe(response => {
+      this.pokemons = {
+        count: 151,
+        results: response.results
+      };
       this.getDataPokemon();
     })
   }
@@ -78,7 +87,6 @@ export class ListaPokemonComponent implements OnInit {
     forkJoin(urlsPokemon$).subscribe(response => {
       this.dataSource = new MatTableDataSource(this.ignorePokemons(response));
       this.dataSourceCopy = this.dataSource;
-      this.addSort();
     })
   }
 
@@ -86,26 +94,17 @@ export class ListaPokemonComponent implements OnInit {
     this.pokemonService.searchPokemon(text).subscribe(response => {
       this.pokemons = {
         count: 1,
-        next: null,
-        previous: null,
         results: []
       };
       this.pageIndex = 0;
       this.dataSource = new MatTableDataSource(this.ignorePokemons([response]));
       this.dataSourceCopy = this.dataSource;
-      this.addSort();
     })
   }
 
   onChangePagination(event: PageEvent) {
-    const currentIndex = this.pageIndex;
     this.pageSize = event.pageSize;
     this.pageIndex = event.pageIndex;
-    if (currentIndex < event.pageIndex) {
-      this.getPokemons(this.pokemons.next);
-    } else {
-      this.getPokemons(this.pokemons.previous);
-    }
   }
 
   deletePokemon(element: IPokemon) {
@@ -116,7 +115,6 @@ export class ListaPokemonComponent implements OnInit {
           this.dataSource.data.splice(index, 1);
           this.dataSource = new MatTableDataSource([...this.dataSource.data]);
           this.dataSourceCopy = this.dataSource;
-          this.addSort();
           // Agregar a la lista el pokemon eliminado
           this.pokemonsDeleted.push({ pageIndex: this.pageIndex, id: element.id });
         }
@@ -134,13 +132,30 @@ export class ListaPokemonComponent implements OnInit {
         data: mensaje
       })
   }
+  
+  sortData(sort: Sort) {
+    const data = this.dataSourceCopy.data.slice();
+    if (!sort.active || sort.direction === '') {
+      this.dataSource = new MatTableDataSource(data);
+      return;
+    }
 
-  addSort() {
-    this.dataSource.sort = this.sort;
+    const newData = data.sort((a: IPokemon, b: IPokemon) => {
+      const isAsc = sort.direction === 'asc';
+      switch (sort.active) {
+        case 'order':
+          return compare(a.order, b.order, isAsc);
+        case 'name':
+          return compare(a.name, b.name, isAsc);
+        default:
+          return 0;
+      }
+    });
+
+    this.dataSource = new MatTableDataSource(newData);
   }
 
   orderData() {
-    console.log(this.orderByValue)
     const data = this.orderByData();
     this.dataSource = new MatTableDataSource(data);
   }
@@ -168,4 +183,15 @@ export class ListaPokemonComponent implements OnInit {
       });
     }
   }
+
+  get pokemonsDatasource() {
+    const indiceInicial = this.pageIndex * this.pageSize;
+    const indiceFinal = indiceInicial + this.pageSize;
+    return this.dataSource.data.slice(indiceInicial, indiceFinal);
+  }
+
+}
+
+function compare(a: number | string, b: number | string, isAsc: boolean) {
+  return (a < b ? -1 : 1) * (isAsc ? 1 : -1);
 }

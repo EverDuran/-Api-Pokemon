@@ -9,9 +9,9 @@ export class PokemonService {
 
   constructor(private http: HttpClient) { }
 
-  getPokemons(url: string = "", limit: number = 10) {
+  getPokemons(url: string = "") {
     let params = new HttpParams();
-    params = params.set('limit', limit.toString());
+    params = params.set('limit', "151"); // Límite
     return this.http.get<IPokemons>(url || URL_API.LISTA_POKEMON, { params });
   }
 

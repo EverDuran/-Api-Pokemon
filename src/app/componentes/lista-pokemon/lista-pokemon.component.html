@@ -1,17 +1,27 @@
-<mat-form-field>
-  <mat-label>Ordenar por</mat-label>
-  <mat-select [(value)]="orderByValue" (change)="orderData()">
-    <mat-option *ngFor="let order of orders" [value]="order.value">
-      {{ order.text }}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
+<div class="c-search-pokemon">
+  <mat-form-field>
+    <mat-label>Ordenar por</mat-label>
+    <mat-select [(value)]="orderByValue" (change)="orderData()">
+      <mat-option *ngFor="let order of orders" [value]="order.value">
+        {{ order.text }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field class="search-form-field">
+    <input matInput type="text" appearance="outline" [(ngModel)]="value" (keyup.enter)="searchPokemones()"
+      placeholder="Buscar..." />
+    <button mat-button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+</div>
 
 <div class="mat-elevation-z8">
-  <mat-table #table [dataSource]="dataSource" matSort>
+  <mat-table #table [dataSource]="pokemonsDatasource" matSort (matSortChange)="sortData($event)">
 
     <ng-container matColumnDef="order">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> No. </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header="order"> No. </mat-header-cell>
       <mat-cell *matCellDef="let element"> {{element.order}} </mat-cell>
     </ng-container>
 
@@ -23,7 +33,7 @@
     </ng-container>
 
     <ng-container matColumnDef="name">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header="name"> Nombre </mat-header-cell>
       <mat-cell *matCellDef="let element"> 
         <a [routerLink]="'/pokemon/' + element.id ">{{element.name}}</a>
       </mat-cell>

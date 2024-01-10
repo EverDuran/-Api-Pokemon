@@ -1,27 +1,39 @@
 # ApiPokemon
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.6.
+Este proyecto es una prueba personal que utiliza la [API de Pokémon](https://pokeapi.co) y está desarrollado en el framework Angular.
 
-## Development server
+## Versiones
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+- Angular CLI: 1.6.6 - 5.2
+- Node: 8.11.3
 
-## Code scaffolding
+## Características
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Listado de Pokémon (151):
+- La api contiene un listado de 1302 Pokémon, pero la aplicación presenta un listado máximo de **151 Pokémon** según indicaciones.
 
-## Build
+![Listado de Pokémon](./src/assets/img/img1.png)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `-prod` flag for a production build.
+### Paginación:
+- La lista de Pokémon está paginada cada 10 registros para facilitar la navegación.
 
-## Running unit tests
+![Paginación](./src/assets/img/img2.png)
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Menú Global de Búsqueda:
+- Los usuarios pueden realizar búsquedas para encontrar rápidamente a su Pokémon.
+- Se muestra un menú en todas las páginas para permitir a los usuarios realizar búsquedas desde cualquier lugar de la aplicación.
 
-## Running end-to-end tests
+![Búsqueda](./src/assets/img/img6.png)
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+### Ordenación:
+- Los Pokémon pueden ordenarse por número y nombre para una mejor organización.
+- Se realizó un ordenamiento dentro de la tabla y tambien fuera.
 
-## Further help
+![Ordenación_1](./src/assets/img/img2.png)
+![Ordenación_2](./src/assets/img/img4.png)
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+### Eliminación de Pokémon:
+- Los usuarios tienen la capacidad de eliminar a un Pokémon de la lista.
+- En este caso no se elimina como tal, sino que se oculta por ser traido por un API todos los registros, y al recargar la pagina se puede volver a llamar a la lista completa.
+
+![Eliminación](./src/assets/img/img5.png)

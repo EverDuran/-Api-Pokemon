@@ -5,7 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { ListaPokemonComponent } from './componentes/lista-pokemon/lista-pokemon.component';
 import { DetallePokemonComponent } from './componentes/detalle-pokemon/detalle-pokemon.component';
-import { MenuBusquedaComponent } from './componentes/menu-busqueda/menu-busqueda.component';
+import { MenuComponent } from './componentes/menu/menu.component';
 import { AppRoutingModule } from './app-routing.module';
 import { PokemonService } from './servicios/pokemon.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,7 +18,7 @@ import { MaterialModule } from './material/material.module'
     AppComponent,
     ListaPokemonComponent,
     DetallePokemonComponent,
-    MenuBusquedaComponent,
+    MenuComponent,
     DialogoConfirmacionComponent
   ],
   imports: [
