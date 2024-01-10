@@ -1,0 +1,28 @@
+<mat-card class="pokemon-card" *ngIf="pokemon">
+  <mat-card-header>
+    <div mat-card-avatar class="pokemon-header-image" 
+      [ngStyle]="{ 'background-image': 'url(' + pokemon.sprites.other.dream_world.front_default + ')' }">
+    </div>
+    <mat-card-title>{{pokemon.name}}</mat-card-title>
+    <mat-card-subtitle>
+      <mat-progress-bar mode="determinate" [value]="pokemon.base_experience"></mat-progress-bar>
+    </mat-card-subtitle>
+  </mat-card-header>
+  <img mat-card-image [src]="pokemon.sprites.other.dream_world.front_default" alt="Photo of a Shiba Inu">
+  <mat-card-content>
+    <mat-list role="list">
+      <mat-list-item role="listitem">
+        Peso: {{ pokemon.weight }}
+        <mat-divider></mat-divider>
+      </mat-list-item>
+      <mat-list-item role="listitem">
+        Altura: {{ pokemon.height }}
+        <mat-divider></mat-divider>
+      </mat-list-item>
+      <mat-list-item role="listitem" *ngFor="let ability of pokemon.abilities; let i = index">
+        Habilidad {{ i + 1 }}: {{ ability.ability.name }}
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>

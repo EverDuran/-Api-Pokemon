@@ -1,0 +1,60 @@
+<mat-form-field>
+  <mat-label>Ordenar por</mat-label>
+  <mat-select [(value)]="orderByValue" (change)="orderData()">
+    <mat-option *ngFor="let order of orders" [value]="order.value">
+      {{ order.text }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<div class="mat-elevation-z8">
+  <mat-table #table [dataSource]="dataSource" matSort>
+
+    <ng-container matColumnDef="order">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> No. </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.order}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="image">
+      <mat-header-cell *matHeaderCellDef> Imagen </mat-header-cell>
+      <mat-cell *matCellDef="let element"> 
+        <img class="c-image-pokemon" [src]="element.sprites.other.dream_world.front_default" [alt]="element.name">
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </mat-header-cell>
+      <mat-cell *matCellDef="let element"> 
+        <a [routerLink]="'/pokemon/' + element.id ">{{element.name}}</a>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="weight">
+      <mat-header-cell *matHeaderCellDef> Peso </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.weight}} </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="height">
+      <mat-header-cell *matHeaderCellDef> Altura </mat-header-cell>
+      <mat-cell *matCellDef="let element"> {{element.height}} </mat-cell>
+    </ng-container>    
+
+    <ng-container matColumnDef="delete">
+      <mat-header-cell *matHeaderCellDef> Eliminar </mat-header-cell>
+      <mat-cell *matCellDef="let element; let i = index"> 
+        <mat-icon color="accent" class="cursor-pointer" (click)="deletePokemon(element)">delete</mat-icon>
+      </mat-cell>
+    </ng-container>    
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+  <mat-paginator 
+    [length]="pokemons.count"
+    [pageIndex]="pageIndex"    
+    [pageSize]="pageSize"
+    [pageSizeOptions]="pageSizeOptions"
+    (page)="onChangePagination($event)"
+    >
+</mat-paginator>
+</div>
